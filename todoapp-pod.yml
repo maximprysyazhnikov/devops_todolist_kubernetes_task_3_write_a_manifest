@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: todoapp
+  namespace: todoapp
+spec:
+  containers:
+    - name: todoapp
+      image: maxisky2595/kube2py:3.0.0
+      ports:
+        - containerPort: 8000
+      readinessProbe:
+        httpGet:
+          path: /healthz
+          port: 8000
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8000
