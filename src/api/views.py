@@ -56,3 +56,64 @@ class TodoViewSet(viewsets.ModelViewSet):
         user = self.request.user
         creator = user if user.is_authenticated else None
         serializer.save(creator=creator)
+
+
+# Add these imports at the top of the file (if not already present)
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.db import connection
+from django.db.utils import DatabaseError
+
+
+# Add these functions at the end of the file
+@require_http_methods(["GET"])
+def readiness_check(request):
+    """
+    Readiness probe endpoint - checks if the application is ready to serve traffic
+    This includes checking database connectivity
+    """
+    try:
+        # Check database connectivity
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+
+        return JsonResponse({
+            'status': 'ready',
+            'message': 'Application is ready to serve traffic',
+            'database': 'connected'
+        }, status=200)
+
+    except DatabaseError as e:
+        return JsonResponse({
+            'status': 'not ready',
+            'message': 'Database connection failed',
+            'error': str(e)
+        }, status=503)
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'not ready',
+            'message': 'Application is not ready',
+            'error': str(e)
+        }, status=503)
+
+
+@require_http_methods(["GET"])
+def liveness_check(request):
+    """
+    Liveness probe endpoint - checks if the application is alive
+    This is a simple check that the Django application is responding
+    """
+    try:
+        return JsonResponse({
+            'status': 'alive',
+            'message': 'Application is alive and responding'
+        }, status=200)
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'dead',
+            'message': 'Application is not responding',
+            'error': str(e)
+        }, status=500)

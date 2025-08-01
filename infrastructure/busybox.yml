@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: todoapp
+  labels:
+    app: busybox
+spec:
+  containers:
+  - name: busybox
+    image: ikulyk404/busyboxplus:curl
+    command: ["sleep", "3600"]  # Keep container running for 1 hour for testing
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+  restartPolicy: Always
