@@ -1,26 +1,21 @@
-# Python & Django
+# Python
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 *.egg-info/
+*.egg
 .env
-.env.*
-.venv/
-venv/
-pip-wheel-metadata/
-dist/
-build/
-.coverage
-htmlcov/
-.pytest_cache/
-*.sqlite3
+*.db
 
-# Django runtime
-staticfiles/
-media/
+# Virtual envs
+venv/
+.env*/
+.venv*/
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 
 # OS
 .DS_Store
